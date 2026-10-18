@@ -203,7 +203,8 @@
   }
   function physMsg() {
     if (st.valve > 0 && st.pg <= 0.001) say('The valve is open and the gauge reads 0: the trapped air is at atmospheric pressure. Pump strokes push air into the reservoir above the oil.');
-    else if (st.valve > 0) say(`The valve is ${st.valve < 1 ? 'slightly open' : 'open'}: air leaks back out and the pressure falls. Close the valve to hold it.`, 'warn');
+    else if (st.valve >= 1) say('The valve is open: each pump stroke raises the pressure, and between strokes air slowly leaks back through the pump. Close the valve to hold the pressure.', 'warn');
+    else if (st.valve > 0) say('The valve is slightly open: air leaks out slowly, the needle falls and the air column grows. Close the valve near the pressure wanted.', 'warn');
     else if (since() < SETTLE) say(`Valve closed. The air was ${st.dT0 >= 0 ? 'warmed by the compression' : 'cooled by the expansion'} and is returning to room temperature: wait about a minute before reading (${mmss(since())} so far).`, 'warn');
     else say('Valve closed and the air back at room temperature: the meniscus and the needle are steady and can be read.', 'ok');
   }
