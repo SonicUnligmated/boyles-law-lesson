@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c1424">
+<title>Boyle's law</title>
+<meta name="description" content="Interactive lesson: verifying Boyle's law with a trapped air column and a Bourdon gauge, and finding the atmospheric pressure from the graph of P against 1/V.">
+<link rel="preload" href="fonts/Oxanium-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Exo2-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/boyle.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='8' fill='%230c1424'/%3E%3Crect x='12' y='4' width='8' height='24' rx='4' fill='none' stroke='%2346d2e8' stroke-width='2'/%3E%3Crect x='13.5' y='15' width='5' height='11.5' rx='2' fill='%23f0a640'/%3E%3Ccircle cx='16' cy='8.5' r='1.3' fill='%2346d2e8'/%3E%3Ccircle cx='16' cy='12' r='1.3' fill='%2346d2e8'/%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div id="cursor" class="hidden" aria-hidden="true"><svg width="32" height="32" viewBox="0 0 32 32"><circle class="cu-pulse" cx="16" cy="16" r="10"/><circle class="cu-ring" cx="16" cy="16" r="10"/><g class="cu-ticks"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4"/></g><g class="cu-mol"><circle cx="12.3" cy="13.2" r="1.25"/><circle cx="19.6" cy="12.6" r="1.25"/><circle cx="17.8" cy="20" r="1.25"/></g><circle class="cu-dot" cx="16" cy="16" r="1.3"/></svg></div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><svg class="brand-mark" viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" rx="7" fill="var(--card)" stroke="rgba(70,210,232,.45)"/><rect x="11.5" y="4.5" width="7" height="21" rx="3.5" fill="none" stroke="var(--acc)" stroke-width="1.6"/><rect x="13" y="14" width="4" height="10" rx="1.6" fill="var(--copper)"/><circle cx="15" cy="8.5" r="1" fill="var(--acc)"/><circle cx="15" cy="11.3" r="1" fill="var(--acc)"/></svg><div><div class="brand-t">Boyle's law</div><div class="brand-s">Physics practical · Lab 10 B</div></div></div>
+    <div class="top-c">Lab 10 B · P ∝ 1/V</div>
+    <div class="top-r"><div class="top-crumb" id="top-crumb"></div></div>
+  </header>
+  <nav class="rail" id="rail-nav" aria-label="Sections"></nav>
+  <main class="stage">
+
+    <section class="view" id="view-boy-practical" data-title="Practical" data-lab="Boyle's law">
+      <div class="sheet wide">
+        <div class="prac-intro">
+          <p class="eyebrow">Lab 10 B · Practical</p>
+          <h1 class="page-h">Boyle's law</h1>
+          <p class="lede">A fixed mass of air is trapped above oil in a sealed glass tube. Pumping air into the oil reservoir pushes the oil up and squeezes the air; the Bourdon gauge shows the pressure. After each change the air is left to return to room temperature, then V and P are read. A straight line of P against 1/V verifies the law, and where it meets the P-axis gives the atmospheric pressure.</p>
+          <button type="button" class="btn-tut" id="boy-tut"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 1.5v11l9-5.5z" fill="currentColor"/></svg>Start tutorial</button>
+        </div>
+        <div class="rig-frame rig tlock" id="boy-rig-frame"><svg id="boy-rig" viewBox="0 0 1000 620" role="img" aria-label="Boyle's law apparatus: a glass tube of trapped air above oil with a cm³ scale, an oil reservoir with a Bourdon gauge, a valve and an air pump"></svg></div>
+        <p class="rig-msg" id="boy-msg" aria-live="polite"></p>
+        <div class="prac-mid">
+          <div class="panel tlock" id="boy-ctl">
+            <h2 class="panel-h">Pump, valve and time</h2>
+            <div class="ctl-row"><button type="button" class="btn-main" id="boy-pump">Pump stroke</button><span class="small muted">The pump pushes air in only while the valve is open.</span></div>
+            <div class="ctl-row"><label>Valve</label><div class="seg" id="boy-valve" role="group" aria-label="Valve"><button type="button" class="btn-quiet sm" data-v="0" aria-pressed="false">Closed</button><button type="button" class="btn-quiet sm" data-v="0.25" aria-pressed="false">Slightly open</button><button type="button" class="btn-quiet sm" data-v="1" aria-pressed="false">Open</button></div></div>
+            <div class="ctl-row"><label>Since the last change</label><b class="readout timer" id="boy-timer">0:00</b><button type="button" class="btn-quiet sm" id="boy-wait">Wait 1 minute</button></div>
+            <p class="ctl-help small">Time on the bench runs six times faster than real time. Compressing the air warms it a little, letting it expand cools it; after about a minute it is back at room temperature.</p>
+            <div class="ctl-btns"><button type="button" class="btn-quiet" id="boy-thermo" aria-pressed="false">Thermometer</button><button type="button" class="btn-quiet" id="boy-mag" aria-pressed="false">Magnifier</button></div>
+            <p class="ctl-help small">The magnifier follows the pointer over the apparatus: hold it over the meniscus to read V, and over the needle to read P.</p>
+            <p class="status" id="boy-status"></p>
+          </div>
+          <div class="panel tlock" id="boy-rec">
+            <h2 class="panel-h">Readings</h2>
+            <p class="ctl-help">With the valve closed and the air back at room temperature, Record reads the meniscus and the needle into the table. At least five pairs, from the maximum pressure down.</p>
+            <div class="rec-row"><button type="button" class="btn-main" id="boy-record">Record</button><button type="button" class="btn-quiet sm" id="boy-undo">Delete last</button></div>
+            <p class="rec-msg" id="boy-recmsg" aria-live="polite"></p>
+            <div class="table-wrap" style="margin-top:12px">
+              <table class="obs" id="boy-table">
+                <thead><tr><th><i>P</i><span class="u">atm (gauge)</span></th><th><i>V</i><span class="u">cm³</span></th><th>1/<i>V</i><span class="u">cm<sup>−3</sup></span></th><th>(<i>P</i> + <i>P</i><sub>0</sub>)<i>V</i><span class="u">atm cm³</span></th></tr></thead>
+                <tbody id="boy-tbody"></tbody>
+              </table>
+            </div>
+            <p class="ctl-help small" id="boy-pvnote">The last column fills in once <i>P</i><sub>0</sub> is found from the graph.</p>
+          </div>
+        </div>
+        <div class="prac-lower">
+          <div class="panel" id="boy-calc">
+            <div class="panel-head"><h2 class="panel-h">Calculation</h2><span class="panel-tag"><i>P</i> = <i>k</i>(1/<i>V</i>) − <i>P</i><sub>0</sub></span></div>
+            <div class="calc-rows tlock">
+              <div class="cr" id="boy-cr-k"><label for="boy-in-k">Slope of the line <span class="sym" tabindex="0" data-sym="k"><i>k</i></span> = <span class="sym" tabindex="0" data-sym="dP">Δ<i>P</i></span> ÷ <span class="sym" tabindex="0" data-sym="dX">Δ(1/<i>V</i>)</span>, between the two handles <span class="u">atm cm³</span></label><input id="boy-in-k" type="text" inputmode="decimal" autocomplete="off"><div class="cr-work" id="boy-w-k"></div></div><div class="cr" id="boy-cr-c"><label for="boy-in-c">Intercept <span class="sym" tabindex="0" data-sym="c"><i>c</i></span>: where the line meets the <span class="sym" tabindex="0" data-sym="Pax"><i>P</i>-axis</span> (1/<i>V</i> = 0) <span class="u">atm</span></label><input id="boy-in-c" type="text" inputmode="decimal" autocomplete="off"><div class="cr-work" id="boy-w-c"></div></div><div class="cr" id="boy-cr-P0"><label for="boy-in-P0">Atmospheric pressure <span class="sym" tabindex="0" data-sym="P0"><i>P</i><sub>0</sub></span> = − <span class="sym" tabindex="0" data-sym="cv"><i>c</i></span> <span class="u">atm</span></label><input id="boy-in-P0" type="text" inputmode="decimal" autocomplete="off"><div class="cr-work" id="boy-w-P0"></div></div><div class="cr" id="boy-cr-kT"><label for="boy-in-kT">Boyle check: mean of <span class="sym" tabindex="0" data-sym="PV">(<i>P</i> + <i>P</i><sub>0</sub>)<i>V</i></span> over the table <span class="u">atm cm³</span></label><input id="boy-in-kT" type="text" inputmode="decimal" autocomplete="off"><div class="cr-work" id="boy-w-kT"></div></div><div class="cr" id="boy-cr-pe"><label for="boy-in-pe">Percentage error <span class="sym" tabindex="0" data-sym="pe">% error</span> = |<span class="sym" tabindex="0" data-sym="P0p"><i>P</i><sub>0</sub></span> − <span class="sym" tabindex="0" data-sym="Pstd">1 atm</span>| ÷ <span class="sym" tabindex="0" data-sym="Pstd2">1 atm</span> × 100 <span class="u">%</span></label><input id="boy-in-pe" type="text" inputmode="decimal" autocomplete="off"><div class="cr-work" id="boy-w-pe"></div></div>
+            </div>
+            <div class="calc-actions tlock"><button type="button" class="btn-main" id="boy-check">Check</button></div>
+            <div class="check-msg" id="boy-chk" aria-live="polite"></div>
+            <div class="result-box" id="boy-result" hidden></div>
+          </div>
+          <div class="panel" id="boy-graph-panel">
+            <div class="panel-head"><h2 class="panel-h">P against 1/V</h2><span class="panel-tag">drag the two handles onto the best line</span></div>
+            <div class="graph-wrap"><svg id="boy-graph" viewBox="0 0 680 470" role="img" aria-label="Gauge pressure against the reciprocal of the volume, with a draggable best-fit line extended to the pressure axis"></svg></div>
+            <p class="gread small" id="boy-gread"></p>
+            <div class="ctl-btns tlock"><button type="button" class="btn-quiet sm" id="boy-greset">Reset line</button></div>
+            <p class="ctl-help small">The gauge reads the pressure above atmospheric, so the line does not pass through the origin: extended back to 1/V = 0 it meets the P-axis at −P<sub>0</sub>. Its slope k is the constant (P + P<sub>0</sub>)V.</p>
+          </div>
+        </div>
+        <div class="prac-foot tlock"><button type="button" class="btn-quiet" id="boy-reset">Start over</button></div>
+      </div>
+    </section>
+    <section class="view" id="view-boy-aim" data-title="Aim and outcomes" data-lab="Boyle's law">
+      <div class="sheet">
+        <p class="disclaimer">This site was prepared with the help of AI. Values, wording and figures may contain mistakes; the lab manual and the instructor take precedence.</p>
+        <p class="eyebrow">Lab 10 B</p>
+        <h1 class="page-h">Boyle's law</h1>
+        <figure class="aim-figure"><svg id="boy-aim-fig" viewBox="0 0 800 300" role="img" aria-label="The trapped air column at low and high pressure, and the straight line of pressure against the reciprocal of volume"></svg></figure>
+        <div class="aim-block"><div class="aim-label">Aim</div><p class="aim-text">To verify Boyle's law and determine the atmospheric pressure.</p></div>
+        <h2 class="sub-h">Intended learning outcomes</h2>
+        <ul class="outcomes">
+          <li>Explain the relationship between the volume and pressure of a gas at constant temperature.</li>
+          <li>Determine the relation between pressure and volume of the gas.</li>
+        </ul>
+        <h2 class="sub-h">Medical perspectives</h2>
+        <div class="med-row">
+          <div class="med"><svg class="med-ic" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8v16" stroke="var(--acc)" stroke-width="2.6" stroke-linecap="round"/><path d="M30 22c-6-4-18-2-20 12-2 12 2 20 8 20s10-6 12-14zM34 22c6-4 18-2 20 12 2 12-2 20-8 20s-10-6-12-14z" fill="var(--acc-pale)" stroke="var(--acc)" stroke-width="2.4" stroke-linejoin="round"/><path d="M8 58h48" stroke="var(--aqua)" stroke-width="2.4" stroke-linecap="round"/></svg><h3>The breathing mechanism</h3><p>The diaphragm and rib muscles enlarge the chest, the lung volume grows and the pressure in the alveoli falls a little below atmospheric, so air flows in. Relaxing them shrinks the volume, raises the pressure and air flows out.</p></div>
+          <div class="med"><svg class="med-ic" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="10" width="48" height="34" rx="5" fill="var(--aqua-pale)" stroke="var(--aqua)" stroke-width="2.4"/><path d="M14 32c4 0 4-12 8-12s4 12 8 12 4-12 8-12 4 12 8 12" fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linecap="round"/><path d="M24 44v8h16v-8M32 52v6" fill="none" stroke="var(--aqua)" stroke-width="2.4"/></svg><h3>Ventilators and anaesthesia machines</h3><p>A ventilator delivers each breath by raising the pressure at the airway; the volume delivered follows from the pressure and the stiffness of the lungs. Anaesthesia machines and oxygen cylinders use P₁V₁ = P₂V₂ to work out how much gas a compressed cylinder can supply.</p></div>
+          <div class="med"><svg class="med-ic" viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="20" width="22" height="34" rx="3" fill="var(--acc-pale)" stroke="var(--acc)" stroke-width="2.4"/><rect x="15" y="12" width="16" height="18" rx="2" fill="none" stroke="var(--aqua)" stroke-width="2.4"/><path d="M40 50l4-10 4 6 4-16 4 10" fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Respiratory physiology</h3><p>Spirometers measure the volumes breathed in and out, and body plethysmographs find the gas volume of the lungs from small pressure changes, both relying on how pressure and volume trade off at constant temperature.</p></div>
+        </div>
+      </div>
+    </section>
+    <section class="view" id="view-boy-theory" data-title="Theory" data-lab="Boyle's law">
+      <div class="sheet">
+        <p class="eyebrow">Lab 10 B · Theory</p>
+        <h1 class="page-h">Pressure, volume and temperature</h1>
+        <h2 class="sub-h first">Pressure from molecular impacts</h2>
+        <p>A gas is a crowd of molecules moving fast in random directions. Each time one strikes a wall it reverses part of its momentum, and the steady rain of impacts is the <b>pressure</b>. Squeeze the same molecules into half the volume and each part of the wall is hit twice as often, at the same speed if the temperature has not changed, so the pressure doubles.</p>
+        <ol class="deriv">
+          <li>Kinetic theory gives the pressure of N molecules of mass m with mean square speed ⟨c²⟩.<span class="eqn">P V = ⅓ N m ⟨c²⟩</span></li>
+          <li>The mean square speed depends only on the temperature.<span class="eqn">½ m ⟨c²⟩ = <sup>3</sup>⁄<sub>2</sub> k<sub>B</sub> T</span></li>
+          <li>So for a fixed mass of gas at constant temperature the product is fixed.<span class="eqn">P V = constant,  P ∝ 1/V</span></li>
+        </ol>
+        <div class="explorer">
+          <div class="ex-view"><svg id="boy-th-svg" viewBox="0 0 740 300" role="img" aria-label="A piston compressing gas molecules, with the pressure and the product PV shown"></svg></div>
+          <div class="ex-side">
+            <div class="ctl"><label for="boy-th-v">Volume <b id="boy-th-vv">40 cm³</b></label><input type="range" id="boy-th-v" min="12" max="60" step="1" value="40"></div>
+            <div class="ex-out" id="boy-th-out" aria-live="polite"></div>
+            <p class="ex-note">Fixed mass of air at 25 °C with PV = 48.7 atm cm³ (absolute pressure). The dots on the small graphs show the present state.</p>
+          </div>
+        </div>
+        <h2 class="sub-h">Constant temperature: why each reading waits</h2>
+        <div class="fig-grid">
+          <figure class="fig-box"><svg id="boy-th-temp" viewBox="0 0 520 240" role="img" aria-label="Temperature of the trapped air after a compression, falling back to room temperature within about a minute"></svg></figure>
+          <div class="fig-text">
+            <p>Pushing the oil up does work on the air, and for a moment the air is a few degrees warmer than the room; letting it expand cools it. A warm gas pushes harder, so a reading taken at once gives a V (and a P) slightly too large and the product PV comes out high.</p>
+            <p>The glass and the oil carry the heat away, and within about a minute the air is back at room temperature. Only then is the process <b>isothermal</b>, the condition Boyle's law needs.</p>
+          </div>
+        </div>
+        <h2 class="sub-h">Gauge pressure and the atmosphere</h2>
+        <div class="fig-grid">
+          <figure class="fig-box"><svg id="boy-th-gauge" viewBox="0 0 520 300" role="img" aria-label="The line of gauge pressure against 1/V meets the pressure axis at minus the atmospheric pressure"></svg></figure>
+          <div class="fig-text">
+            <p>A Bourdon gauge compares the pressure inside with the air outside: it reads 0 when the valve is open to the room. Its reading <i>P</i> is the <b>gauge pressure</b>, the excess over the atmospheric pressure <i>P</i><sub>0</sub>. The trapped air feels the absolute pressure <i>P</i> + <i>P</i><sub>0</sub>.</p>
+            <ol class="deriv tight">
+              <li>Boyle's law for the absolute pressure.<span class="eqn">(P + P₀) V = k</span></li>
+              <li>Divide by V and rearrange.<span class="eqn">P = k (1/V) − P₀</span></li>
+            </ol>
+            <p>So P against 1/V is a straight line of slope <i>k</i> that meets the P-axis at <b>−P<sub>0</sub></b>. The size of the intercept is the atmospheric pressure, about 1 atm (101.3 kPa).</p>
+          </div>
+        </div>
+        <h2 class="sub-h">Breathing, ventilators and the spirometer</h2>
+        <div class="fig-grid">
+          <figure class="fig-box"><svg id="boy-th-spiro" viewBox="0 0 520 300" role="img" aria-label="A simple spirometer: a floating bell over water with a counterweight and a pen tracing the breathing volume"></svg></figure>
+          <div class="fig-text">
+            <p>In quiet breathing the chest enlarges the lungs by about half a litre; the alveolar pressure dips by roughly 1 mmHg below atmospheric, enough for air to flow in. A <b>ventilator</b> reverses the drive: it raises the airway pressure to push the breath in.</p>
+            <p>A <b>spirometer</b> records these volumes. In the classic design the breath lifts or lowers a light bell floating over water; a counterweight and pen trace the volume against time. Modern units measure the flow electronically and integrate it.</p>
+            <p>A cylinder of oxygen holding 10 L at about 137 atm gauge (138 atm absolute) gives about 138 × 10 ÷ 1 ≈ 1380 L at atmospheric pressure: Boyle's law on the absolute pressures, at constant temperature.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="view" id="view-boy-method" data-title="Method" data-lab="Boyle's law">
+      <div class="sheet">
+        <p class="eyebrow">Lab 10 B · Method</p>
+        <h1 class="page-h">Procedure</h1>
+        <h2 class="sub-h first">Apparatus</h2>
+        <div class="table-wrap"><table class="sym-t"><thead><tr><th>Apparatus</th><th>Name and role</th></tr></thead><tbody><tr><td class="ic"><svg id="boy-eq-0" viewBox="0 0 120 60" aria-hidden="true"></svg></td><td><b>Glass tube with scale</b><br>Holds the fixed mass of air above the oil; the printed scale gives its volume in cm³ at the meniscus.</td></tr><tr><td class="ic"><svg id="boy-eq-1" viewBox="0 0 120 60" aria-hidden="true"></svg></td><td><b>Oil reservoir</b><br>A steel cylinder of oil; air pumped in above the oil pushes it up the tube.</td></tr><tr><td class="ic"><svg id="boy-eq-2" viewBox="0 0 120 60" aria-hidden="true"></svg></td><td><b>Bourdon gauge</b><br>A curved tube that straightens under pressure and turns the needle; reads the gauge pressure in atm.</td></tr><tr><td class="ic"><svg id="boy-eq-3" viewBox="0 0 120 60" aria-hidden="true"></svg></td><td><b>Valve</b><br>Holds the pressure when closed; opened slightly it lets air out slowly.</td></tr><tr><td class="ic"><svg id="boy-eq-4" viewBox="0 0 120 60" aria-hidden="true"></svg></td><td><b>Air pump</b><br>A hand pump with a non-return valve; each stroke pushes air into the reservoir.</td></tr><tr><td class="ic"><svg id="boy-eq-5" viewBox="0 0 120 60" aria-hidden="true"></svg></td><td><b>Thermometer (optional)</b><br>Shows the air warming on compression and cooling back to room temperature.</td></tr></tbody></table></div>
+        <h2 class="sub-h">Steps</h2>
+        <div class="method-wrap">
+          <ol class="steps" id="boy-steps"><li><button type="button" class="step"><span class="sn">1</span><span>Connect the air pump to the inlet of the oil reservoir.</span></button></li><li><button type="button" class="step"><span class="sn">2</span><span>Increase the pressure on the air in the tube until the pressure gauge reads its maximum value.</span></button></li><li><button type="button" class="step"><span class="sn">3</span><span>Close the valve and leave for a minute so the air returns to room temperature.</span></button></li><li><button type="button" class="step"><span class="sn">4</span><span>Read the volume V of the air column from the scale, at the meniscus, and the pressure P from the gauge.</span></button></li><li><button type="button" class="step"><span class="sn">5</span><span>Reduce the pressure by opening the valve slightly, then close it. Again let the air return to room temperature.</span></button></li><li><button type="button" class="step"><span class="sn">6</span><span>Read the new volume V and pressure P.</span></button></li><li><button type="button" class="step"><span class="sn">7</span><span>Repeat steps 5 and 6 to get at least five pairs of readings.</span></button></li><li><button type="button" class="step"><span class="sn">8</span><span>Plot a graph of pressure P against the inverse of the volume, 1/V.</span></button></li></ol>
+          <div class="step-view"><div class="step-fig"><svg id="boy-step-svg" viewBox="0 0 520 360" aria-hidden="true"></svg></div><p class="step-cap" id="boy-step-cap" aria-live="polite"></p></div>
+        </div>
+        <div class="tips"><div class="tips-label">Good practice</div><ul>
+          <li>Read the scale with the eye level with the meniscus, and read the needle from straight in front of the dial.</li>
+          <li>Wait about a minute after every change before reading: the air must be back at room temperature.</li>
+          <li>Open the valve only slightly, so the pressure falls slowly and can be stopped near the value wanted.</li>
+          <li>Take the readings from the highest pressure downwards and spread them over the whole scale.</li>
+        </ul></div>
+        <div class="tips safety"><div class="tips-label">Care</div><ul>
+          <li>Do not pump beyond the maximum of the gauge; the tube and joints are made for that pressure only.</li>
+          <li>Release the pressure slowly at the end, so the oil does not surge up the tube.</li>
+        </ul></div>
+      </div>
+    </section>
+    <section class="view" id="view-boy-obs" data-title="Observation and calculation" data-lab="Boyle's law">
+      <div class="sheet">
+        <p class="eyebrow">Lab 10 B · Observation and calculation</p>
+        <h1 class="page-h">From readings to P<sub>0</sub></h1>
+        <p class="ex-head"><span class="ex-badge">Example values</span></p>
+        <p class="note" style="margin-top:0;margin-bottom:22px">A worked example with physically consistent values for a fixed mass of air at room temperature, each pair read after a minute's wait. The gauge reads the pressure above atmospheric.</p>
+        <div class="formula-card"><div class="big-eq"><i>P</i> = <i>k</i> · <span class="frac"><span>1</span><span><i>V</i></span></span> − <i>P</i><sub>0</sub></div><p>From (<i>P</i> + <i>P</i><sub>0</sub>)<i>V</i> = <i>k</i>: the slope is <i>k</i> and the intercept on the P-axis is −<i>P</i><sub>0</sub>.</p></div>
+        <h2 class="sub-h">Observation table</h2>
+        <div class="table-wrap"><table class="obs" id="boy-ex-table">
+          <thead><tr><th><i>P</i><span class="u">atm (gauge)</span></th><th><i>V</i><span class="u">cm³</span></th><th>1/<i>V</i><span class="u">cm<sup>−3</sup></span></th><th>(<i>P</i> + <i>P</i><sub>0</sub>)<i>V</i><span class="u">atm cm³</span></th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+        <h2 class="sub-h">Graph</h2>
+        <figure class="fig-box wide"><svg id="boy-ex-graph" viewBox="0 0 680 470" role="img" aria-label="Worked example: the straight line of P against 1/V extended to the P-axis"></svg></figure>
+        <h2 class="sub-h">Calculation</h2>
+        <div class="calc" id="boy-ex-calc"></div>
+        <h2 class="sub-h">Result</h2>
+        <div class="table-wrap"><table class="res-t" id="boy-ex-res"></table></div>
+        <h2 class="sub-h">Common slips</h2>
+        <div class="slips"><div class="slip"><h3>P against V</h3><p>P against V is a curve. Boyle's law gives a straight line only for P against 1/V.</p></div>
+          <div class="slip"><h3>Sign of the intercept</h3><p>The line meets the P-axis below zero, at c = −P₀. The atmospheric pressure is −c, a positive number.</p></div>
+          <div class="slip"><h3>Reading too soon</h3><p>Straight after a change the air is warmer or cooler than the room and PV is off by about 1 %. Wait a minute.</p></div>
+          <div class="slip"><h3>Gauge pressure in PV</h3><p>The gauge reads the excess pressure. PV is constant only with the absolute pressure P + P₀.</p></div></div>
+      </div>
+    </section>
+    <section class="view" id="view-boy-mcq" data-title="MCQs" data-lab="Boyle's law">
+      <div class="sheet">
+        <p class="eyebrow">Lab 10 B · MCQs</p>
+        <h1 class="page-h">Check understanding</h1>
+        <div class="mcq-bar"><span class="mcq-score" id="boy-mcq-score"></span><button type="button" class="btn-quiet sm" id="boy-mcq-reset">Reset</button></div>
+        <ol class="mcq-list" id="boy-mcq-list"></ol>
+        <div class="page-end with-extras">
+          <div class="extras"><button type="button" class="extras-toggle" aria-expanded="false" aria-haspopup="true">Optional extras ▴</button>
+            <div class="extras-panel" role="menu"><a role="menuitem" href="https://grokipedia.com/page/Boyle%27s_law" target="_blank" rel="noopener">Boyle's law<small>Grokipedia</small></a><a role="menuitem" href="https://grokipedia.com/page/Spirometry" target="_blank" rel="noopener">Spirometry<small>Grokipedia</small></a><a role="menuitem" href="https://grokipedia.com/page/Mechanical_ventilation" target="_blank" rel="noopener">Mechanical ventilation<small>Grokipedia</small></a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="tut-bar" id="tut-bar" hidden role="region" aria-label="Tutorial">
+  <div class="tut-main"><div class="tut-title" id="tut-title"></div><div class="tut-text" id="tut-text" aria-live="polite"></div><div class="tut-f" id="tut-f"></div></div>
+  <div class="tut-ctl">
+    <button type="button" class="tut-btn" id="tut-prev" title="Previous step (←)">‹ Previous step</button>
+    <button type="button" class="tut-btn" id="tut-next" title="Next step (→)">Next step ›</button>
+    <button type="button" class="tut-btn tut-pause" id="tut-pause" aria-pressed="false" title="Pause (Space)"><svg class="ti i-pause" viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2" width="3.2" height="10" rx="1"/><rect x="8.3" y="2" width="3.2" height="10" rx="1"/></svg><svg class="ti i-play" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 1.8v10.4l8.5-5.2z"/></svg><span class="tl">Pause</span></button>
+    <label class="tut-speed">Speed <select id="tut-speed" aria-label="Tutorial speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option></select></label>
+    <button type="button" class="tut-btn stop" id="tut-stop">■ Stop</button>
+  </div>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/tutor.js"></script>
+<script src="js/mcq.js"></script>
+<script src="js/boyle.js"></script>
+<script src="js/bench.js"></script>
+<script>SOL.boot();</script>
+</body>
+</html>
