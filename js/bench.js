@@ -369,7 +369,7 @@
     else if (isFinite(v.c) && Math.abs(v.c + ch) <= .02) flag('c', `The line meets the P-axis below zero: the intercept is negative, c = ${sgf(ch, 2)} atm.`);
     else if (isFinite(v.c) && FV && Math.abs(v.c - FV.c) < .3) flag('c', 'That intercept belongs to P against V. The intercept used here is where the P against 1/V line meets the P-axis.');
     else flag('c', 'c = y₁ − k x₁: the value of P on the line where 1/V = 0, marked on the graph.');
-    const cRef = isFinite(v.c) ? v.c : ch;
+    const cRef = isFinite(v.c) && Math.abs(v.c - ch) <= .015 ? v.c : ch;
     if (isFinite(v.P0) && Math.abs(v.P0 + cRef) <= .006 && v.P0 > 0) ok('P0');
     else if (isFinite(v.P0) && v.P0 < 0) flag('P0', `P₀ is minus the intercept: c = ${sgf(cRef, 2)} atm, so P₀ = ${sgf(-cRef, 2)} atm, a positive pressure.`);
     else if (isFinite(v.P0) && v.P0 > 80 && v.P0 < 120) flag('P0', 'That looks like kPa. The gauge and the manual use atm, so P₀ is about 1 atm.');
