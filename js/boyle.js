@@ -26,7 +26,7 @@
     W(g, `M${x + w * .3} ${y0 - (y0 - y1) * .3} L${x1} ${y1}`, { stroke: C.acc, 'stroke-width': 2.6 });
     xs.forEach(f => el('circle', { cx: x + w * f, cy: y0 - (y0 - y1) * (f * w / (x1 - x)) + (f === .63 ? 2 : f === .5 ? -2 : 0), r: 4.5, fill: C.ink, stroke: 'var(--bg)', 'stroke-width': 1.5 }, g));
     el('circle', { cx: x, cy: y0, r: 6, fill: 'none', stroke: C.warn, 'stroke-width': 2 }, g);
-    T(g, x + 12, y0 + 5, '−P₀', { fill: C.warn, 'font-weight': 700, 'font-family': F_HEAD, 'font-size': 15 });
+    T(g, x + 12, y0 + 22, '−P₀', { fill: C.warn, 'font-weight': 700, 'font-family': F_HEAD, 'font-size': 15 });
     txt(g, x + w + 4, oy + 18, '1/V', { 'text-anchor': 'end', 'font-size': 14, fill: C.ink, 'font-style': 'italic', 'font-family': F_BODY });
     T(g, x + 8, y + 6, 'P', { 'font-size': 14, fill: C.ink, 'font-style': 'italic' });
     T(g, x - 8, oy + 5, '0', { 'text-anchor': 'end', 'font-size': 13 });
@@ -105,7 +105,7 @@
   /* temperature after a compression */
   (function temp() {
     const s = $(P + '-th-temp'); if (!s) return;
-    const pl = makePlot(s, { W: 520, H: 240, ml: 60, mt: 36, mb: 50, mr: 20, xmax: 90, ymin: 24, ymax: 30, xstep: 15, ystep: 1, xdec: 0, ydec: 0, xlabel: ['time after the change (s)'], ylabel: ['air temperature (°C)'] });
+    const pl = makePlot(s, { W: 520, H: 240, ml: 60, mt: 36, mb: 64, mr: 20, xmax: 90, ymin: 24, ymax: 30, xstep: 15, ystep: 1, xdec: 0, ydec: 0, xlabel: ['time after the change (s)'], ylabel: ['air temperature (°C)'] });
     let d = ''; for (let t = 0; t <= 90; t += 1) { const k = t >= 60 ? 0 : (Math.exp(-t / 14) - Math.exp(-60 / 14)) / (1 - Math.exp(-60 / 14)); d += `${d ? 'L' : 'M'}${pl.X(t)} ${pl.Y(25 + 4 * k)} `; }
     W(pl.g, d, { stroke: C.warn, 'stroke-width': 2.6 });
     W(pl.g, `M${pl.X(0)} ${pl.Y(25)} L${pl.X(90)} ${pl.Y(25)}`, { stroke: C.acc, 'stroke-dasharray': '5 5', 'stroke-width': 1.4 });
@@ -118,8 +118,8 @@
   (function gauge() {
     const s = $(P + '-th-gauge'); if (!s) return; const g = el('g', null, s);
     const { oy, y0 } = lineFig(g, 80, 30, 380, 230, { zero: .6 });
-    W(g, `M70 ${oy} L70 ${y0}`, { stroke: C.warn, 'stroke-width': 1.6 }); W(g, `M64 ${oy} L76 ${oy} M64 ${y0} L76 ${y0}`, { stroke: C.warn, 'stroke-width': 1.6 });
-    T(g, 60, (oy + y0) / 2 + 5, 'P₀', { 'text-anchor': 'end', fill: C.warn, 'font-weight': 700, 'font-family': F_HEAD });
+    W(g, `M52 ${oy} L52 ${y0}`, { stroke: C.warn, 'stroke-width': 1.6 }); W(g, `M46 ${oy} L58 ${oy} M46 ${y0} L58 ${y0}`, { stroke: C.warn, 'stroke-width': 1.6 });
+    T(g, 42, (oy + y0) / 2 + 5, 'P₀', { 'text-anchor': 'end', fill: C.warn, 'font-weight': 700, 'font-family': F_HEAD });
     T(g, 290, 60, 'slope k = (P + P₀)V', { fill: C.acc2, 'font-weight': 700, 'font-family': F_HEAD });
     T(g, 200, 290, 'P = k (1/V) − P₀', { 'text-anchor': 'middle', fill: C.ink, 'font-weight': 700, 'font-family': F_HEAD, 'font-size': 16 });
   })();
@@ -134,11 +134,11 @@
     T(g, 140, 150, 'bell', { 'text-anchor': 'middle', 'font-size': 13, fill: C.ink, 'font-weight': 600 });
     W(g, 'M140 110 L140 50 L330 50 L330 120', { stroke: C.ink2, 'stroke-width': 1.4 });
     el('circle', { cx: 140, cy: 50, r: 9, fill: 'none', stroke: C.ink2, 'stroke-width': 2 }, g); el('circle', { cx: 330, cy: 50, r: 9, fill: 'none', stroke: C.ink2, 'stroke-width': 2 }, g);
-    el('rect', { x: 318, y: 120, width: 24, height: 34, rx: 3, fill: 'var(--rg-steel-3)' }, g); T(g, 352, 142, 'counterweight', { 'font-size': 12.5 });
-    W(g, 'M330 154 L330 176 L360 176', { stroke: C.ink2, 'stroke-width': 1.4 }); el('circle', { cx: 362, cy: 176, r: 3, fill: C.warn }, g);
-    el('rect', { x: 362, y: 140, width: 130, height: 120, rx: 4, fill: 'var(--card)', stroke: C.line2 }, g);
-    let d = ''; for (let x = 0; x <= 126; x += 2) d += `${d ? 'L' : 'M'}${364 + x} ${200 + 18 * Math.sin(x / 10)} `; W(g, d, { stroke: C.acc, 'stroke-width': 2 });
-    T(g, 427, 280, 'volume trace', { 'text-anchor': 'middle', 'font-size': 12.5 });
+    el('rect', { x: 318, y: 120, width: 24, height: 34, rx: 3, fill: 'var(--rg-steel-3)' }, g); T(g, 312, 136, 'counterweight', { 'font-size': 12.5, 'text-anchor': 'end' });
+    W(g, 'M342 137 L372 176', { stroke: C.ink2, 'stroke-width': 1.4 }); el('circle', { cx: 374, cy: 176, r: 3.4, fill: C.warn }, g); T(g, 437, 122, 'pen on drum', { 'text-anchor': 'middle', 'font-size': 12.5 });
+    el('rect', { x: 372, y: 130, width: 130, height: 120, rx: 4, fill: 'var(--card)', stroke: C.line2 }, g);
+    let d = ''; for (let x = 0; x <= 126; x += 2) d += `${d ? 'L' : 'M'}${374 + x} ${176 + 18 * Math.sin(x / 10)} `; W(g, d, { stroke: C.acc, 'stroke-width': 2 });
+    T(g, 437, 270, 'volume trace', { 'text-anchor': 'middle', 'font-size': 12.5 });
     W(g, 'M100 230 L100 290 L20 290', { stroke: C.aqua, 'stroke-width': 3 }); T(g, 22, 284, 'breath', { 'font-size': 12.5, fill: C.aqua });
   })();
 

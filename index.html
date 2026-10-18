@@ -41,7 +41,7 @@
           <div class="panel tlock" id="boy-ctl">
             <h2 class="panel-h">Pump, valve and time</h2>
             <div class="ctl-row"><button type="button" class="btn-main" id="boy-pump">Pump stroke</button><span class="small muted">The pump pushes air in only while the valve is open.</span></div>
-            <div class="ctl-row"><label>Valve</label><div class="seg" id="boy-valve" role="group" aria-label="Valve"><button type="button" class="btn-quiet sm" data-v="0" aria-pressed="false">Closed</button><button type="button" class="btn-quiet sm" data-v="0.25" aria-pressed="false">Slightly open</button><button type="button" class="btn-quiet sm" data-v="1" aria-pressed="false">Open</button></div></div>
+            <div class="ctl-row"><label>Valve</label><div class="seg" id="boy-valve" role="group" aria-label="Valve"><button type="button" class="btn-quiet sm" data-v="0" aria-pressed="false">Closed</button><button type="button" class="btn-quiet sm" data-v="0.3" aria-pressed="false">Slightly open</button><button type="button" class="btn-quiet sm" data-v="1" aria-pressed="false">Open</button></div></div>
             <div class="ctl-row"><label>Since the last change</label><b class="readout timer" id="boy-timer">0:00</b><button type="button" class="btn-quiet sm" id="boy-wait">Wait 1 minute</button></div>
             <p class="ctl-help small">Time on the bench runs six times faster than real time. Compressing the air warms it a little, letting it expand cools it; after about a minute it is back at room temperature.</p>
             <div class="ctl-btns"><button type="button" class="btn-quiet" id="boy-thermo" aria-pressed="false">Thermometer</button><button type="button" class="btn-quiet" id="boy-mag" aria-pressed="false">Magnifier</button></div>
@@ -182,7 +182,7 @@
         <h1 class="page-h">From readings to P<sub>0</sub></h1>
         <p class="ex-head"><span class="ex-badge">Example values</span></p>
         <p class="note" style="margin-top:0;margin-bottom:22px">A worked example with physically consistent values for a fixed mass of air at room temperature, each pair read after a minute's wait. The gauge reads the pressure above atmospheric.</p>
-        <div class="formula-card"><div class="big-eq"><i>P</i> = <i>k</i> · <span class="frac"><span>1</span><span><i>V</i></span></span> − <i>P</i><sub>0</sub></div><p>From (<i>P</i> + <i>P</i><sub>0</sub>)<i>V</i> = <i>k</i>: the slope is <i>k</i> and the intercept on the P-axis is −<i>P</i><sub>0</sub>.</p></div>
+        <div class="formula-card"><div class="big-eq"><i>P</i> = <i>k</i> · <span class="frac"><span>1</span><span><i>V</i></span></span> − <span><i>P</i><sub>0</sub></span></div><p>From (<i>P</i> + <i>P</i><sub>0</sub>)<i>V</i> = <i>k</i>: the slope is <i>k</i> and the intercept on the P-axis is −<i>P</i><sub>0</sub>.</p></div>
         <h2 class="sub-h">Observation table</h2>
         <div class="table-wrap"><table class="obs" id="boy-ex-table">
           <thead><tr><th><i>P</i><span class="u">atm (gauge)</span></th><th><i>V</i><span class="u">cm³</span></th><th>1/<i>V</i><span class="u">cm<sup>−3</sup></span></th><th>(<i>P</i> + <i>P</i><sub>0</sub>)<i>V</i><span class="u">atm cm³</span></th></tr></thead>
